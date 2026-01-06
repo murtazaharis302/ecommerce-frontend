@@ -122,7 +122,7 @@ const Navbar = () => {
         </div>
       </Link>
 
-      <div style={navLinksContainer}>
+      <div style={navLinksContainer} className="nav-links">
         <Link
           to="/"
           style={linkStyle(hoveredLink === 'home')}

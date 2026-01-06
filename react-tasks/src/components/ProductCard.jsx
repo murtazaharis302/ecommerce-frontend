@@ -157,6 +157,7 @@ const ProductCard = ({ product }) => {
             addToWishlist(product);
             alert(isWishlisted ? '💔 Removed from wishlist' : '❤️ Added to wishlist!');
           }}
+          className="icon-btn"
           style={wishlistButtonStyle}
           onMouseEnter={(e) => {
             e.currentTarget.style.transform = "scale(1.15) rotate(10deg)";

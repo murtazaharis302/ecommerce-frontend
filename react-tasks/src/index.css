@@ -364,26 +364,46 @@ p {
   }
 }
 
+/* Mobile Responsiveness Improvements */
+.icon-btn {
+  width: 45px !important;
+  height: 45px !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 50% !important;
+}
+
 @media (max-width: 640px) {
-  div[style*="padding: 40px"] {
+
+  div[style*="padding: 40px"],
+  div[style*="padding:40px"] {
     padding: 20px !important;
   }
 
-  div[style*="maxWidth: 1200px"],
-  div[style*="maxWidth: 900px"],
-  div[style*="maxWidth: 800px"],
-  div[style*="maxWidth: 600px"] {
+  div[style*="max-width: 1400px"],
+  div[style*="max-width: 1200px"],
+  div[style*="max-width: 1000px"],
+  div[style*="max-width: 900px"],
+  div[style*="max-width: 800px"],
+  div[style*="max-width: 600px"] {
     margin: 0 auto !important;
-    padding: 0 16px;
+    padding: 0 16px !important;
   }
 
   /* Grid layout adjustments */
-  div[style*="gridTemplateColumns: repeat"] {
+  div[style*="grid-template-columns: repeat"],
+  .products-grid,
+  .checkout-grid,
+  .detail-grid {
     grid-template-columns: 1fr !important;
   }
 
-  /* Checkout form layout */
-  div[style*="gridTemplateColumns: 1fr 1fr"] {
+  /* Checkout form layout and other 2-column grids */
+  div[style*="grid-template-columns: 1fr 1fr"],
+  div[style*="grid-template-columns: 1.2fr 0.8fr"],
+  .checkout-form-grid {
     grid-template-columns: 1fr !important;
   }
 
@@ -391,10 +411,19 @@ p {
   nav {
     flex-direction: column !important;
     gap: 12px !important;
+    height: auto !important;
+    padding: 15px !important;
   }
 
-  /* Button sizing */
-  button {
+  .nav-links {
+    gap: 15px !important;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  /* Button sizing - Excluding icon buttons */
+  button:not(.icon-btn) {
     width: 100% !important;
     padding: 14px !important;
     font-size: 15px !important;
@@ -408,9 +437,16 @@ p {
   }
 
   /* Cart items layout */
-  div[style*="display: flex"][style*="justifyContent: space-between"] {
+  div[style*="display: flex"][style*="justify-content: space-between"],
+  .cart-item {
     flex-direction: column !important;
     gap: 12px !important;
+    align-items: flex-start !important;
+  }
+
+  .cart-item-actions {
+    width: 100%;
+    justify-content: space-between !important;
   }
 }
 

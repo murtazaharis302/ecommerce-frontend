@@ -200,7 +200,7 @@ const Home = () => {
           ))}
         </div>
 
-        <div style={productsGridStyle}>
+        <div style={productsGridStyle} className="products-grid">
           {filtered.map(p => (
             <ProductCard key={p.id} product={p} />
           ))}

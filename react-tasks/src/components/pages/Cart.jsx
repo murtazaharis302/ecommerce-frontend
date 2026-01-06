@@ -70,7 +70,7 @@ const Cart = () => {
           <>
             <div style={{ display: "grid", gap: "15px" }}>
               {cart.map((item, index) => (
-                <div key={index} style={cartItemStyle} onMouseEnter={(e) => e.currentTarget.style.transform = "translateX(10px)"} onMouseLeave={(e) => e.currentTarget.style.transform = "translateX(0)"}>
+                <div key={index} style={cartItemStyle} className="cart-item" onMouseEnter={(e) => e.currentTarget.style.transform = "translateX(10px)"} onMouseLeave={(e) => e.currentTarget.style.transform = "translateX(0)"}>
                   <div style={{ display: "flex", gap: "20px", alignItems: "center" }}>
                     <div style={{
                       width: "80px",
@@ -88,7 +88,7 @@ const Cart = () => {
                     </div>
                   </div>
 
-                  <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "20px" }} className="cart-item-actions">
                     <div style={{ display: "flex", alignItems: "center", background: "rgba(255, 255, 255, 0.1)", borderRadius: "12px", padding: "4px" }}>
                       <button
                         onClick={() => updateQuantity(item.id, (item.quantity || 1) - 1)}
