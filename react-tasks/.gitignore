@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+vendor/
+ecommerce-backend/.env
+ecommerce-backend/storage/*.key
+ecommerce-backend/storage/logs/*.log
