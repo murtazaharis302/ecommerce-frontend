@@ -1,4 +1,5 @@
 import { createContext, useState, useEffect } from "react";
+import axios from "axios";
 
 export const ShopContext = createContext();
 
@@ -15,6 +16,7 @@ const ShopProvider = ({ children }) => {
     const savedUser = localStorage.getItem("user");
     return savedUser ? JSON.parse(savedUser) : null;
   });
+  const [token, setToken] = useState(localStorage.getItem("token") || "");
 
   // Save cart to localStorage whenever it changes
   useEffect(() => {
@@ -26,7 +28,6 @@ const ShopProvider = ({ children }) => {
     localStorage.setItem("wishlist", JSON.stringify(wishlist));
   }, [wishlist]);
 
-  // Save user to localStorage whenever it changes
   useEffect(() => {
     if (user) {
       localStorage.setItem("user", JSON.stringify(user));
@@ -35,11 +36,43 @@ const ShopProvider = ({ children }) => {
     }
   }, [user]);
 
+  useEffect(() => {
+    if (token) {
+      localStorage.setItem("token", token);
+    } else {
+      localStorage.removeItem("token");
+    }
+  }, [token]);
+
+  const logout = async () => {
+    const tempToken = token;
+    // Clear ALL persistence for a fresh start
+    setToken("");
+    setUser(null);
+    setCart([]);
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("cart");
+
+    try {
+      if (tempToken) {
+        await axios.post("http://127.0.0.1:8000/api/logout", {}, {
+          headers: { Authorization: `Bearer ${tempToken}` }
+        });
+      }
+    } catch (err) {
+      console.error("Logout backend error:", err);
+    } finally {
+      // Hard redirect to Login page as requested by user
+      window.location.href = "/login";
+    }
+  };
+
   const addToCart = (product) => {
     console.log('ShopContext: Adding product', product);
     const existingItem = cart.find(item => item.id === product.id);
     if (existingItem) {
-      setCart(cart.map(item => 
+      setCart(cart.map(item =>
         item.id === product.id ? { ...item, quantity: (item.quantity || 1) + 1 } : item
       ));
     } else {
@@ -73,14 +106,18 @@ const ShopProvider = ({ children }) => {
   return (
     <ShopContext.Provider value={{
       cart,
+      setCart,
       wishlist,
       user,
       setUser,
+      token,
+      setToken,
       addToCart,
       removeFromCart,
       updateQuantity,
       addToWishlist,
-      removeFromWishlist
+      removeFromWishlist,
+      logout
     }}>
       {children}
     </ShopContext.Provider>

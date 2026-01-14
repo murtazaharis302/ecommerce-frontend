@@ -3,7 +3,7 @@ import { useContext, useState } from "react";
 import { ShopContext } from "../context/ShopContext";
 
 const Navbar = () => {
-  const { user, cart } = useContext(ShopContext);
+  const { user, cart, wishlist, logout } = useContext(ShopContext);
   const [hoveredLink, setHoveredLink] = useState(null);
 
   const navStyle = {
@@ -97,6 +97,42 @@ const Navbar = () => {
     animation: cart.length > 0 ? "pulse 2s infinite" : "none"
   };
 
+  const wishlistButtonStyle = (isHovered) => ({
+    color: "#ffffff",
+    textDecoration: "none",
+    fontWeight: "600",
+    fontSize: "15px",
+    background: isHovered
+      ? "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"
+      : "rgba(255, 255, 255, 0.05)",
+    padding: "10px 20px",
+    borderRadius: "25px",
+    transition: "all 0.3s ease",
+    position: "relative",
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+    border: "1px solid rgba(255, 255, 255, 0.1)",
+    boxShadow: isHovered
+      ? "0 8px 20px rgba(245, 87, 108, 0.4)"
+      : "0 4px 15px rgba(0, 0, 0, 0.2)",
+    transform: isHovered ? "translateY(-2px) scale(1.05)" : "translateY(0) scale(1)"
+  });
+
+  const wishlistBadgeStyle = {
+    background: "#f5576c",
+    color: "#ffffff",
+    borderRadius: "50%",
+    width: "22px",
+    height: "22px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "12px",
+    fontWeight: "700",
+    animation: wishlist.length > 0 ? "pulse 2s infinite" : "none"
+  };
+
   const userBadgeStyle = {
     display: "flex",
     alignItems: "center",
@@ -143,10 +179,49 @@ const Navbar = () => {
           <span style={cartBadgeStyle}>{cart.length}</span>
         </Link>
 
+        <Link
+          to="/wishlist"
+          style={wishlistButtonStyle(hoveredLink === 'wishlist')}
+          onMouseEnter={() => setHoveredLink('wishlist')}
+          onMouseLeave={() => setHoveredLink(null)}
+        >
+          ❤️ Wishlist
+          {wishlist.length > 0 && <span style={wishlistBadgeStyle}>{wishlist.length}</span>}
+        </Link>
+
+
         {user ? (
-          <div style={userBadgeStyle}>
-            <span style={{ fontSize: "18px" }}>👤</span>
-            <span>{user.name}</span>
+          <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
+            <Link to="/profile" style={{ textDecoration: "none" }}>
+              <div style={userBadgeStyle} onMouseEnter={(e) => e.currentTarget.style.background = "rgba(102, 126, 234, 0.25)"} onMouseLeave={(e) => e.currentTarget.style.background = "rgba(102, 126, 234, 0.15)"}>
+                <span style={{ fontSize: "18px" }}>👤</span>
+                <span>{user.name}</span>
+              </div>
+            </Link>
+            <button
+              onClick={logout}
+              style={{
+                background: "rgba(255, 107, 107, 0.15)",
+                color: "#ff6b6b",
+                border: "1px solid rgba(255, 107, 107, 0.3)",
+                padding: "8px 16px",
+                borderRadius: "20px",
+                cursor: "pointer",
+                fontWeight: "600",
+                fontSize: "14px",
+                transition: "all 0.3s"
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.background = "#ff6b6b";
+                e.target.style.color = "white";
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background = "rgba(255, 107, 107, 0.15)";
+                e.target.style.color = "#ff6b6b";
+              }}
+            >
+              Logout
+            </button>
           </div>
         ) : (
           <Link

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { getProducts, addProduct, deleteProduct, updateProduct } from "../../utils/productStorage";
+import toast from "react-hot-toast";
 
 const Admin = () => {
   const [products, setProducts] = useState([]);
@@ -34,16 +35,16 @@ const Admin = () => {
     e.preventDefault();
 
     if (!formData.name || !formData.price) {
-      alert("Please fill required fields (Name, Price)");
+      toast.error("Please fill required fields (Name, Price)");
       return;
     }
 
     if (editingId) {
       updateProduct(editingId, formData);
-      alert("✅ Product updated!");
+      toast.success("Product updated!");
     } else {
       addProduct(formData);
-      alert("✅ Product added!");
+      toast.success("Product added!");
     }
 
     setFormData({
@@ -75,7 +76,7 @@ const Admin = () => {
   const handleDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
       deleteProduct(id);
-      alert("❌ Product deleted!");
+      toast.success("Product deleted!");
       loadProducts();
     }
   };

@@ -1,9 +1,10 @@
+import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 import { useContext, useState } from "react";
 import { ShopContext } from "../context/ShopContext";
 
 const ProductCard = ({ product }) => {
-  const { addToCart, addToWishlist, wishlist } = useContext(ShopContext);
+  const { addToCart, addToWishlist, removeFromWishlist, wishlist } = useContext(ShopContext);
   const isWishlisted = wishlist.some(item => item.id === product.id);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -154,8 +155,13 @@ const ProductCard = ({ product }) => {
         <button
           onClick={(e) => {
             e.stopPropagation();
-            addToWishlist(product);
-            alert(isWishlisted ? '💔 Removed from wishlist' : '❤️ Added to wishlist!');
+            if (isWishlisted) {
+              removeFromWishlist(product.id);
+              toast.success('Removed from wishlist');
+            } else {
+              addToWishlist(product);
+              toast.success('Added to wishlist!');
+            }
           }}
           className="icon-btn"
           style={wishlistButtonStyle}
@@ -186,7 +192,7 @@ const ProductCard = ({ product }) => {
           e.stopPropagation();
           console.log('Adding to cart:', product);
           addToCart(product);
-          alert(`✅ ${product.name} added to cart!`);
+          toast.success(`${product.name} added to cart!`);
         }}
         style={addToCartButtonStyle}
         onMouseEnter={(e) => {

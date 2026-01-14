@@ -1,6 +1,6 @@
-import { getProducts } from "../../utils/productStorage";
 import ProductCard from "../ProductCard";
 import { useState, useEffect } from "react";
+import axios from "axios";
 
 const Home = () => {
   const [search, setSearch] = useState("");
@@ -8,21 +8,26 @@ const Home = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    loadProducts();
-    // Listen for changes
-    const interval = setInterval(loadProducts, 1000);
-    return () => clearInterval(interval);
+    const fetchProducts = async () => {
+      try {
+        const res = await axios.get("http://127.0.0.1:8000/api/products");
+        const formattedProducts = res.data.map(p => ({
+          ...p,
+          image: p.image.startsWith('http') ? p.image : `http://127.0.0.1:8000/images/${p.image}`
+        }));
+        setProducts(formattedProducts);
+      } catch (err) {
+        console.error("Error fetching products:", err);
+      }
+    };
+    fetchProducts();
   }, []);
 
-  const loadProducts = () => {
-    setProducts(getProducts());
-  };
-
-  const categories = ["all", ...new Set(products.map(p => p.category))];
+  const categories = ["all", ...new Set(products.map(p => p.type).filter(t => t))];
 
   const filtered = products.filter(p => {
     const matchesSearch = p.name.toLowerCase().includes(search.toLowerCase());
-    const matchesCategory = selectedCategory === "all" || p.category === selectedCategory;
+    const matchesCategory = selectedCategory === "all" || p.type === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 

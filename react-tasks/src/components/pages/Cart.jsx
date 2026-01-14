@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { ShopContext } from "../../context/ShopContext";
 
 const Cart = () => {
-  const { cart, removeFromCart, updateQuantity } = useContext(ShopContext);
+  const { cart, removeFromCart, updateQuantity, user } = useContext(ShopContext);
 
   const total = cart.reduce((sum, item) => sum + (item.price * (item.quantity || 1)), 0);
 
@@ -133,30 +133,48 @@ const Cart = () => {
               <h2 style={{ color: "white", marginBottom: "20px", fontSize: "2rem" }}>
                 Total: <span style={{ color: "var(--success)" }}>Rs {total}</span>
               </h2>
-              <Link to="/checkout">
-                <button style={{
-                  padding: "16px 40px",
-                  background: "var(--primary-gradient)",
-                  color: "#fff",
-                  borderRadius: "30px",
-                  fontSize: "18px",
-                  fontWeight: "700",
-                  boxShadow: "0 8px 25px rgba(102, 126, 234, 0.4)",
-                  transform: "translateY(0)",
-                  transition: "all 0.3s"
-                }}
-                  onMouseEnter={(e) => {
-                    e.target.style.transform = "translateY(-3px)";
-                    e.target.style.boxShadow = "0 12px 30px rgba(102, 126, 234, 0.6)";
+              {user ? (
+                <Link to="/checkout">
+                  <button style={{
+                    padding: "16px 40px",
+                    background: "var(--primary-gradient)",
+                    color: "#fff",
+                    borderRadius: "30px",
+                    fontSize: "18px",
+                    fontWeight: "700",
+                    boxShadow: "0 8px 25px rgba(102, 126, 234, 0.4)",
+                    transform: "translateY(0)",
+                    transition: "all 0.3s"
                   }}
-                  onMouseLeave={(e) => {
-                    e.target.style.transform = "translateY(0)";
-                    e.target.style.boxShadow = "0 8px 25px rgba(102, 126, 234, 0.4)";
+                    onMouseEnter={(e) => {
+                      e.target.style.transform = "translateY(-3px)";
+                      e.target.style.boxShadow = "0 12px 30px rgba(102, 126, 234, 0.6)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.transform = "translateY(0)";
+                      e.target.style.boxShadow = "0 8px 25px rgba(102, 126, 234, 0.4)";
+                    }}
+                  >
+                    Proceed to Checkout →
+                  </button>
+                </Link>
+              ) : (
+                <Link to="/login">
+                  <button style={{
+                    padding: "16px 40px",
+                    background: "rgba(102, 126, 234, 0.15)",
+                    color: "white",
+                    borderRadius: "30px",
+                    fontSize: "18px",
+                    fontWeight: "700",
+                    border: "1px solid rgba(102, 126, 234, 0.3)",
+                    transition: "all 0.3s"
                   }}
-                >
-                  Proceed to Checkout →
-                </button>
-              </Link>
+                  >
+                    Login to Checkout
+                  </button>
+                </Link>
+              )}
             </div>
           </>
         )}

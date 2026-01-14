@@ -1,10 +1,20 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { ShopContext } from "../../context/ShopContext";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const Login = () => {
-  const { setUser, user } = useContext(ShopContext);
+  const { setUser, setToken, user, logout } = useContext(ShopContext);
+  const navigate = useNavigate();
   const [isSignup, setIsSignup] = useState(false);
   const [formData, setFormData] = useState({ email: "", password: "", name: "" });
+
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -13,16 +23,32 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (isSignup && !formData.name) {
-      alert("Please enter your name");
+      toast.error("Please enter your name");
       return;
     }
     if (!formData.email || !formData.password) {
-      alert("Please fill all fields");
+      toast.error("Please fill all fields");
       return;
     }
-    setUser({ name: formData.name || formData.email.split("@")[0], email: formData.email });
-    alert(`✅ ${isSignup ? "Signup" : "Login"} successful!`);
-    setFormData({ email: "", password: "", name: "" });
+
+    const url = isSignup ? "http://127.0.0.1:8000/api/register" : "http://127.0.0.1:8000/api/login";
+
+    axios.post(url, formData)
+      .then(res => {
+        if (!isSignup) {
+          setToken(res.data.token);
+          setUser(res.data.user); // Use the user object from backend
+          toast.success("Login successful!");
+          navigate("/"); // Redirect to home page
+        } else {
+          toast.success("Registration successful! Please login.");
+          setIsSignup(false);
+        }
+        setFormData({ email: "", password: "", name: "" });
+      })
+      .catch(err => {
+        toast.error(`${isSignup ? "Signup" : "Login"} failed: ` + (err.response?.data?.message || "Unknown error"));
+      });
   };
 
   if (user) {
@@ -34,7 +60,7 @@ const Login = () => {
           <p style={{ color: "var(--text-primary)", fontSize: "20px", fontWeight: "600", marginBottom: "10px" }}>{user.name}</p>
           <p style={{ color: "var(--text-secondary)", marginBottom: "30px" }}>{user.email}</p>
           <button
-            onClick={() => setUser(null)}
+            onClick={logout}
             style={{
               width: "100%",
               padding: "16px",
